@@ -148,7 +148,7 @@ function memo(type, compare){
     const elementType = {
         $$typeof: REACT_MEMO_TYPE,
         type,
-        compare: compare === undefined ? null : compare;
+        compare: compare === undefined ? null : compare
     }
     return elementType;
 }
