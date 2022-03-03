@@ -137,3 +137,33 @@ function CustomRouter(props){
 }
 
 <CustomRouter path="/list" component={List}/>
+
+function getRootPermission(){
+    return new Promise((resolve) => {
+        resolve({
+            code: 200,
+            data: ['/config/index', '/config/writeTag']
+        })
+    })
+}
+
+const Permission = React.createContext([]);
+export default function Index(){
+    const [rootPermission, setRootPermission] = React.useState([]);
+    React.useEffect(() => {
+        getRootPermission().then(res => {
+            const {code, data} = res;
+            code === 200 && setRootPermission(data);
+        })
+    }, [])
+
+    return <Permission.Provider value={rootPermission}>
+        <RootRouter/>
+    </Permission.Provider>
+}
+
+export function PermmisionRouter(props){
+    const permissionList = useContext(Permission);
+    const isMatch = permissionList.indexOf(props.path) >= 0;
+    return isMatch ? <Route {...props}/> : <Redirect to={'/config/NoPermission'}/>
+}
